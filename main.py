@@ -30,23 +30,21 @@ def copyItem(item: dl.Item):
 
 
 # Use an existing project
-project = dl.projects.get(project_name='TestProject')
+project = dl.projects.get(project_name='TestingProject')
 dataset = project.datasets.get(dataset_name='Source')
 items = dataset.items.get_all_items()
 
-for item in items:
-    copyItem(item)
+# For Testing The Function
+# for item in items:
+#     copyItem(item)
 
 
 service = project.services.deploy(func=copyItem,
                                   service_name='copy-item')
-filters = dl.Filters()
-filters.add(field='datasetId', values=dataset.id)
-trigger = service.triggers.create(name='image-processing-rgb',
-                                  function_name='rgb2gray',
+trigger = service.triggers.create(name='copying-items-to-target',
+                                  function_name='copyItem',
                                   execution_mode=dl.TriggerExecutionMode.ALWAYS,
                                   resource=dl.TriggerResource.ITEM,
-                                  actions=dl.TriggerAction.UPDATED,
-                                  filters=filters)
+                                  actions=dl.TriggerAction.CREATED)
 
 
